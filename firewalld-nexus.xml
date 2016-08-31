@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>NEXUS (HTTP)</short>
+  <description>Nexus default port</description>
+  <port protocol="tcp" port="8081"/>
+  <!--
+      Another port for the docker registry server.
+      <port protocol="tcp" port="8082"/>
+  -->
+</service>

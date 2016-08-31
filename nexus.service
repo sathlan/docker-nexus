@@ -1,0 +1,15 @@
+[Unit]
+Description=Sonata Nexus server
+After=network.target
+Wants=sshd-keygen.service
+
+[Service]
+User=nexus
+ExecStart=/opt/sonatype/nexus/bin/nexus run
+ExecReload=/opt/sonatype/nexus/bin/nexus force-reload
+ExecStop=/opt/sonatype/nexus/bin/nexus stop
+TimeoutStartSec=10m
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
