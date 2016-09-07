@@ -42,6 +42,11 @@ node ('docker') {
           sh "rake spec:localhost"
         }
       }
+      // test docker-compose test.
+      withEnv(ruby_env) {
+        sh "rake spec:${docker_name}"
+        sh "rake spec:localhost"
+      }
     }
 
     stage('promote') {
