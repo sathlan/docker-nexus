@@ -1,10 +1,11 @@
 // -*- mode: groovy -*-
 node ('docker') {
+  def current_dir = pwd()
   def dockerOpt = "-v /sys/fs/cgroup:/sys/fs/cgroup:ro -t"
   def dockerBuildOpt = "."
   def docker_name = 'nexus'
   def image_name = "sathlan/${docker_name}"
-  def ruby_env = ["PATH=${pwd()}/bin:${env.PATH}", "GEM_HOME=${pwd()}/.bundled_gems"]
+  def ruby_env = ["PATH=${current_dir}/bin:${env.PATH}", "GEM_HOME=${current_dir}/.bundled_gems"]
   def build_image = "${image_name}:${env.BUILD_ID}"
   def myEnv
 
