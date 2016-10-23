@@ -29,7 +29,7 @@ RSpec.configure do |config|
   config.formatter = :documentation # :progress, :html, :textmate
 
   # Set externally in the Jenkinsfile.
-  container_id_var_name = "#{ENV['TARGET_HOST'].upcase}_ID"
+  container_id_var_name = "#{ENV['TARGET_HOST'].tr('-', '_').upcase}_ID"
   container_id = ENV[container_id_var_name]
   config.before :all do
     if !ENV['USE_DOCKER'].nil?
