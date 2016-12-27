@@ -4,6 +4,9 @@ LABEL date="Thu Aug 11 18:06:29 CEST 2016"
 # https://github.com/sonatype/docker-nexus3/blob/master/Dockerfile
 MAINTAINER <sofer@sathlan.org>
 
+ARG NEXUS_VERSION=3.2.0-01
+ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/3/nexus-${NEXUS_VERSION}-unix.tar.gz
+
 RUN dnf install --setopt=tsflags=nodocs -y \
   curl tar net-tools procps-ng \
   && dnf clean all
@@ -16,8 +19,7 @@ ENV JAVA_HOME=/opt/java \
 
 # configure nexus runtime
 ENV SONATYPE_DIR=/opt/sonatype
-ENV NEXUS_VERSION=3.1.0-04 \
-  NEXUS_HOME=${SONATYPE_DIR}/nexus \
+ENV NEXUS_HOME=${SONATYPE_DIR}/nexus \
   NEXUS_DATA=/nexus-data \
   NEXUS_CONTEXT='' \
   SONATYPE_WORK=${SONATYPE_DIR}/sonatype-work
@@ -34,7 +36,7 @@ RUN mkdir -p /opt \
 # install nexus
 RUN mkdir -p ${NEXUS_HOME} \
   && curl --fail --silent --location --retry 3 \
-    https://download.sonatype.com/nexus/3/nexus-${NEXUS_VERSION}-unix.tar.gz \
+    ${NEXUS_DOWNLOAD_URL} \
   | gunzip \
   | tar x -C ${NEXUS_HOME} --strip-components=1 nexus-${NEXUS_VERSION} \
   && chown -R root:root ${NEXUS_HOME}
@@ -58,13 +60,13 @@ RUN useradd -r -u 200 -m -c "nexus role account" -d ${NEXUS_DATA} -s /bin/false 
   && ln -s ${NEXUS_DATA} ${SONATYPE_WORK}/nexus3 \
   && chown -R nexus:nexus ${NEXUS_DATA}
 
+VOLUME ${NEXUS_DATA}
+
 COPY nexus.service /etc/systemd/system/nexus.service
 RUN systemctl enable nexus.service
 
 EXPOSE 8081
 WORKDIR ${NEXUS_HOME}
-
-VOLUME ${NEXUS_DATA}
 
 ENV JAVA_MAX_MEM=1200m \
   JAVA_MIN_MEM=1200m \
